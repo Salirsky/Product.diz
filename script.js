@@ -12,42 +12,81 @@ let angle = 0;
 // Функция анимации
 function animateGradient() {
 
-    angle += 0.002;
+    angle += 0.003;
 
-    const x1 = 50 + Math.sin(angle) * 20;
-    const y1 = 50 + Math.cos(angle) * 20;
+    const x1 = 50 + Math.sin(angle) * 30;
+    const y1 = 50 + Math.cos(angle) * 30;
 
-    const x2 = 50 + Math.sin(angle * 1.3) * 25;
-    const y2 = 50 + Math.cos(angle * 1.3) * 25;
+    const x2 = 50 + Math.sin(angle * 1.3) * 35;
+    const y2 = 50 + Math.cos(angle * 1.3) * 35;
 
-    const x3 = 50 + Math.sin(angle * 0.8) * 30;
-    const y3 = 50 + Math.cos(angle * 0.8) * 30;
+    const x3 = 50 + Math.sin(angle * 0.8) * 40;
+    const y3 = 50 + Math.cos(angle * 0.8) * 40;
 
-    background.style.background = `
-        radial-gradient(
-            circle at ${x1}% ${y1}%,
-            #F9F9F9 0%,
-            transparent 45%
-        ),
-        radial-gradient(
-            circle at ${x2}% ${y2}%,
-            #EFFAF8 0%,
-            transparent 45%
-        ),
-        radial-gradient(
-            circle at ${x3}% ${y3}%,
-            #FFF5F5 0%,
-            transparent 45%
-        ),
-        radial-gradient(
-            circle at ${100 - x1}% ${100 - y2}%,
-            #F4F2FD 0%,
-            transparent 45%
-        )
-    `;
+    background.style.background = ` 
+    radial-gradient( 
+    circle at ${x1}% ${y1}%, 
+    #C6C5CA 0%, 
+    transparent 45% 
+    ), 
+    
+    radial-gradient( 
+    circle at ${x2}% ${y2}%, 
+    #DDE8E4 0%, 
+    transparent 45% 
+    ), 
+    
+    radial-gradient( 
+    circle at ${x3}% ${y3}%, 
+    #F5D7CD 0%, transparent 45% 
+    ), 
+    
+    radial-gradient( 
+    circle at 80% 20%, 
+    #FAF4E6 0%, 
+    transparent 45% 
+    ), 
+    
+    radial-gradient( 
+    circle at 15% 80%, 
+    #EAF3EE 0%, 
+    transparent 45% 
+    ), 
+    
+    radial-gradient( 
+    circle at 80% 80%, 
+    #F9FAEA 0%, 
+    transparent 45% 
+    ) `;
 
     requestAnimationFrame(animateGradient);
 }
 
 // Запускаем анимацию
 animateGradient();
+
+/* Intersection Observer */
+
+const observer =
+new IntersectionObserver(
+(entries) => {
+entries.forEach(entry => {
+    if (entry.isIntersecting) {
+        entry.target.classList.add(
+            "visible"
+        );
+    }
+});
+
+},
+{
+threshold: 0.15
+}
+);
+
+document
+.querySelectorAll(".reveal")
+.forEach(element => {
+observer.observe(element);
+
+});
