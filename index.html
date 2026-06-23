@@ -1,22 +1,224 @@
+<!-- Объявление типа документа HTML5 -->
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <link rel="shortcut icon" type="image/png" href="favicon.ico">
- <!----<meta name="viewport" content="width=device-width, initial-scale=1.0">   --> 
-  <meta name="viewport" content="width=1600"> <!--- отображаемая область ---> 
-  <meta name="description" content="" >
-  <meta name="keywords" content="" >      
-  <meta http-equiv="author" content="Salirsky (Марина Белова)" >
-  <meta http-equiv="pragma" content="no-cache" >
-  
-  <title>Продуктовый дизайнер</title>
-  <link rel="stylesheet" href="style.css" type="text/css"/>
 
-  <script src="./script.js" defer></script>
+<!-- Корневой элемент страницы -->
+<html lang="ru">
+
+<head>
+
+    <!-- Кодировка страницы -->
+    <meta charset="UTF-8">
+
+    <!-- Адаптация под мобильные устройства -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO-описание -->
+    <meta name="description" content="Портфолио продуктового дизайнера">
+
+    <!-- Имя автора -->
+    <meta name="author" content="Имя Фамилия">
+
+    <!-- Заголовок вкладки браузера -->
+    <title>Имя Фамилия — Продуктовый дизайнер</title>
+
+    <!-- Подключение CSS -->
+    <link rel="stylesheet" href="style.css">
 
 </head>
+
 <body>
+
+    <!-- Контейнер анимированного фона -->
+    <div class="background-gradient"></div>
+
+    <!-- Основной контейнер страницы -->
+    <main class="container">
+
+        <!-- Шапка -->
+        <header class="hero">
+
+            <!-- Заголовок -->
+            <h1>Имя Фамилия — Продуктовый дизайнер</h1>
+
+            <!-- Контакты -->
+            <div class="contacts">
+
+                <a href="https://t.me/your_username" target="_blank">
+                    Telegram
+                </a>
+
+                <a href="mailto:mail@example.com">
+                    mail@example.com
+                </a>
+
+            </div>
+
+        </header>
+
+        <!-- Bento Grid -->
+        <section class="bento-grid">
+
+            <!-- Карточка "О себе" -->
+            <article class="card about">
+
+                <!-- Фото -->
+                <img
+                    src="images/profile.jpg"
+                    alt="Фото дизайнера"
+                    class="profile-image"
+                >
+
+                <!-- Текст -->
+                <div class="about-content">
+
+                    <h2>О себе</h2>
+
+                    <p>
+                        Привет!
+                        <strong>Я проектировщик интерфейсов с инженерным
+                        бэкграундом, дизайнер + UX исследователь.</strong>
+
+                        В дизайне с 2022 г. Работала над проектами в составах
+                        нескольких команд разработки.
+
+                        Моя сильная сторона —
+                        <strong>системный подход</strong>,
+                        люблю структурировать и упорядочивать.
+                    </p>
+
+                    <p>
+                        До UX/UI 10 лет работала авиационным
+                        инженером-конструктором,
+                        <strong>занималась системами электроснабжения
+                        самолётов.</strong>
+                    </p>
+
+                    <p>
+                        Благодаря такому бэкграунду
+                        <strong>мне близки технические предметные области</strong>,
+                        а также
+                        <strong>развитое системное и аналитическое мышление.</strong>
+                    </p>
+
+                </div>
+
+            </article>
+
+            <!-- Карточка навыков -->
+            <article class="card skills">
+
+                <h2>Навыки</h2>
+
+                <div class="skills-list">
+
+                    <div>
+                        <strong>UX-исследования:</strong>
+                        Опросы ЦА, Коридорные тестирования
+                    </div>
+
+                    <div>
+                        <strong>Проектирование:</strong>
+                        User Flow, Screen Mapping,
+                        Проектирование пользовательских интерфейсов,
+                        Прототипирование
+                    </div>
+
+                    <div>
+                        <strong>UI:</strong>
+                        Atomic Design, Дизайн-системы,
+                        UI-Kit, Интерфейсная анимация,
+                        Адаптивный дизайн, Дизайн-ревью
+                    </div>
+
+                    <div>
+                        <strong>Технические:</strong>
+                        HTML, CSS, JavaScript,
+                        Техническое понимание
+                    </div>
+
+                    <div>
+                        <strong>Работа в команде:</strong>
+                        Jira, Confluence, Яндекс.Трекер
+                    </div>
+
+                </div>
+
+            </article>
+
+            <!-- Кейс №1 -->
+            <article class="card project">
+
+                <img
+                    src="images/case1.jpg"
+                    alt="Кейс 1"
+                    class="project-image"
+                >
+
+                <h3>Кейс 1</h3>
+
+                <p>
+                    Краткое описание кейса.
+                </p>
+
+                <div class="tags">
+                    <span>UX</span>
+                    <span>SaaS</span>
+                    <span>B2B</span>
+                </div>
+
+            </article>
+
+            <!-- Кейс №2 -->
+            <article class="card project">
+
+                <img
+                    src="images/case2.jpg"
+                    alt="Кейс 2"
+                    class="project-image"
+                >
+
+                <h3>Кейс 2</h3>
+
+                <p>
+                    Краткое описание кейса.
+                </p>
+
+                <div class="tags">
+                    <span>Product Design</span>
+                    <span>Research</span>
+                </div>
+
+            </article>
+
+            <!-- Кейс №3 -->
+            <article class="card project">
+
+                <img
+                    src="images/case3.jpg"
+                    alt="Кейс 3"
+                    class="project-image"
+                >
+
+                <h3>Кейс 3</h3>
+
+                <p>
+                    Краткое описание кейса.
+                </p>
+
+                <div class="tags">
+                    <span>Enterprise</span>
+                    <span>UI</span>
+                </div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <!-- Подключение JavaScript -->
+    <script src="script.js"></script>
+
 </body>
 
 </html>
