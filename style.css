@@ -7,17 +7,32 @@
 
 /* Основные настройки страницы */
 body {
-    font-family: Inter, sans-serif;
+    font-family: "IBM Plex Sans", sans-serif;
     min-height: 100vh;
-    color: #1f1f1f;
+    color: #34343A;
     overflow-x: hidden;
 }
 
-/* Контейнер анимированного фона */
+/* Mesh Gradient */
+
 .background-gradient {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
+position: fixed;
+inset: 0;
+z-index: -2;
+
+}
+
+/* Grain */
+
+.noise {
+position: fixed;
+inset: 0;
+z-index: -1;
+opacity: .08;
+pointer-events: none;
+background-image:
+url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+
 }
 
 /* Центральный контейнер */
@@ -34,14 +49,14 @@ body {
 
 /* Заголовок */
 .hero h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 12px;
 }
 
 /* Контакты */
 .contacts {
     display: flex;
-    gap: 20px;
+    gap: 24px;
 }
 
 /* Ссылки */
@@ -64,28 +79,41 @@ body {
 }
 
 /* Карточка */
+/* Glassmorphism */
+
 .card {
-    background: rgba(255,255,255,0.7);
-    backdrop-filter: blur(12px);
 
-    border: 1px solid #e5e5e5;
-
-    border-radius: 28px;
-
-    padding: 24px;
-
-    transition: 0.3s ease;
+background:
+    rgba(255,255,255,0.35);
+backdrop-filter:
+    blur(24px)
+    saturate(180%);
+-webkit-backdrop-filter:
+    blur(24px)
+    saturate(180%);
+border:
+    1px solid
+    rgba(255,255,255,0.4);
+box-shadow:
+    0 8px 40px rgba(0,0,0,.05),
+    inset 0 1px 0 rgba(255,255,255,.5);
+border-radius: 28px;
+padding: 24px;
+transition:
+    transform .3s ease,
+    box-shadow .3s ease;
 }
 
 /* Hover карточек */
 .card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
+box-shadow:
+    0 20px 60px rgba(0,0,0,.08);
 }
 
 /* Блок о себе */
 .about {
     grid-column: span 8;
-
     display: flex;
     gap: 24px;
 }
@@ -94,9 +122,7 @@ body {
 .profile-image {
     width: 240px;
     height: 240px;
-
     object-fit: cover;
-
     border-radius: 20px;
 }
 
@@ -122,18 +148,19 @@ body {
 
 /* Карточки проектов */
 .project {
-    grid-column: span 4;
+
+grid-column: span 4;
+text-decoration: none;  /* новое */
+color: inherit;  /* новое */
+
 }
 
 /* Превью кейса */
 .project-image {
     width: 100%;
     height: 220px;
-
     object-fit: cover;
-
     border-radius: 18px;
-
     margin-bottom: 16px;
 }
 
@@ -162,14 +189,30 @@ body {
     font-size: 14px;
 }
 
+/* Reveal animation */
+.reveal {
+opacity: 0;
+transform:
+    translateY(30px);
+transition:
+    opacity .8s ease,
+    transform .8s ease;
+}
+
+.reveal.visible {
+opacity: 1;
+transform:
+    translateY(0);
+}
+
+/* Адаптация под разные размеры экрана */
 /* Планшеты */
 @media (max-width: 1024px) {
-
     .about {
         grid-column: span 12;
         flex-direction: column;
     }
-
+    
     .skills {
         grid-column: span 12;
     }
