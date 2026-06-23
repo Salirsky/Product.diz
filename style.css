@@ -53,7 +53,7 @@ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' he
     pointer-events: none;
 
     /* Подключаем gif из папки img */
-    background-image: url("./img/grain.gif");
+    background-image: url("./img/noise.gif");
 
     /* Повторяем изображение по всей площади */
     background-repeat: repeat;
@@ -62,7 +62,7 @@ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' he
     background-size: 180px 180px;
 
     /* Прозрачность 10% */
-    opacity: 0.81;
+    opacity: 0.1;
 
     /* Режим наложения Multiply */
     mix-blend-mode: multiply;
