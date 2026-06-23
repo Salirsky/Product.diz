@@ -26,19 +26,19 @@ function animateGradient() {
     background.style.background = ` 
     radial-gradient( 
     circle at ${x1}% ${y1}%, 
-    #C6C5CA 0%, 
+    #F5F5F5 0%, 
     transparent 45% 
     ), 
     
     radial-gradient( 
     circle at ${x2}% ${y2}%, 
-    #DDE8E4 0%, 
+    #EFFAF4 0%, 
     transparent 45% 
     ), 
     
     radial-gradient( 
     circle at ${x3}% ${y3}%, 
-    #F5D7CD 0%, transparent 45% 
+    #FFEEE8 0%, transparent 45% 
     ), 
     
     radial-gradient( 
@@ -49,13 +49,13 @@ function animateGradient() {
     
     radial-gradient( 
     circle at 15% 80%, 
-    #EAF3EE 0%, 
+    #F9FAEA 0%, 
     transparent 45% 
     ), 
     
     radial-gradient( 
     circle at 80% 80%, 
-    #F9FAEA 0%, 
+    #F3FAEA 0%, 
     transparent 45% 
     ) `;
 
