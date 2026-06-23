@@ -1,0 +1,201 @@
+/* Сброс отступов */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Основные настройки страницы */
+body {
+    font-family: Inter, sans-serif;
+    min-height: 100vh;
+    color: #1f1f1f;
+    overflow-x: hidden;
+}
+
+/* Контейнер анимированного фона */
+.background-gradient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+/* Центральный контейнер */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+/* Верхний блок */
+.hero {
+    margin-bottom: 32px;
+}
+
+/* Заголовок */
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 12px;
+}
+
+/* Контакты */
+.contacts {
+    display: flex;
+    gap: 20px;
+}
+
+/* Ссылки */
+.contacts a {
+    text-decoration: none;
+    color: #444;
+    transition: 0.3s;
+}
+
+/* Hover */
+.contacts a:hover {
+    opacity: 0.7;
+}
+
+/* Bento Grid */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+}
+
+/* Карточка */
+.card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+
+    border: 1px solid #e5e5e5;
+
+    border-radius: 28px;
+
+    padding: 24px;
+
+    transition: 0.3s ease;
+}
+
+/* Hover карточек */
+.card:hover {
+    transform: translateY(-4px);
+}
+
+/* Блок о себе */
+.about {
+    grid-column: span 8;
+
+    display: flex;
+    gap: 24px;
+}
+
+/* Фото */
+.profile-image {
+    width: 240px;
+    height: 240px;
+
+    object-fit: cover;
+
+    border-radius: 20px;
+}
+
+/* Контент */
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Навыки */
+.skills {
+    grid-column: span 4;
+}
+
+/* Список навыков */
+.skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+/* Карточки проектов */
+.project {
+    grid-column: span 4;
+}
+
+/* Превью кейса */
+.project-image {
+    width: 100%;
+    height: 220px;
+
+    object-fit: cover;
+
+    border-radius: 18px;
+
+    margin-bottom: 16px;
+}
+
+/* Заголовок проекта */
+.project h3 {
+    margin-bottom: 8px;
+}
+
+/* Теги */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 16px;
+}
+
+/* Тег */
+.tags span {
+    background: rgba(0,0,0,0.05);
+
+    padding: 8px 12px;
+
+    border-radius: 999px;
+
+    font-size: 14px;
+}
+
+/* Планшеты */
+@media (max-width: 1024px) {
+
+    .about {
+        grid-column: span 12;
+        flex-direction: column;
+    }
+
+    .skills {
+        grid-column: span 12;
+    }
+
+    .project {
+        grid-column: span 6;
+    }
+}
+
+/* Телефоны */
+@media (max-width: 768px) {
+
+    .container {
+        padding: 20px;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .project {
+        grid-column: span 12;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: auto;
+    }
+}
