@@ -311,45 +311,558 @@ observer.observe(element);
 
 // drawMesh();
 
+// ------------------------------------------------------------------- Упругая ткань -------------------------------------------------------------------
+
+// /* ==========================================
+//    Interactive Cloth Simulation
+//    Физическая симуляция тканевой сетки
+// ========================================== */
+
+// // Canvas
+// const canvas = document.getElementById("mesh-canvas");
+// const ctx = canvas.getContext("2d");
+
+// // ==========================================
+// // Настройки симуляции
+// // ==========================================
+
+// const settings = {
+
+//     // Внешний вид
+//     spacing: 24,
+//     color: "#E1E2E9",
+//     lineWidth: 1,
+//     opacity: 0.85,
+
+//     // Физика ткани
+//     damping: 0.985,          // Затухание инерции
+//     iterations: 5,           // Количество расчётов связей
+//     stiffness: 0.3,         // Жёсткость ткани
+//     bendStiffness: 0.1,     // Сопротивление изгибу
+
+//     // Воздействие курсора
+//     influenceRadius: 400,
+//     mouseStrength: 1.9,
+//     mousePush: 0.45,
+
+//     // Внешние силы
+//     gravity: 0.015,
+//     windStrength: 0.525,
+
+// };
+
+// // ==========================================
+// // Размеры Canvas
+// // ==========================================
+
+// let width = 0;
+// let height = 0;
+// let particles = [];
+// let constraints = [];
+// let columns = 0;
+// let rows = 0;
+// let time = 0;
+
+// function resizeCanvas() {
+
+//     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+//     width = window.innerWidth;
+//     height = window.innerHeight;
+
+//     canvas.width = width * dpr;
+//     canvas.height = height * dpr;
+
+//     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+//     createCloth();
+// }
+
+// // ==========================================
+// // Курсор
+// // ==========================================
+
+// const mouse = {
+//     x: -1000,
+//     y: -1000,
+//     active: false,
+//     vx: 0,
+//     vy: 0
+// };
+
+// let previousMouseX = -1000;
+// let previousMouseY = -1000;
+
+// window.addEventListener("pointermove", (event) => {
+
+//     mouse.x = event.clientX;
+//     mouse.y = event.clientY;
+
+//     mouse.vx = mouse.x - previousMouseX;
+//     mouse.vy = mouse.y - previousMouseY;
+
+//     previousMouseX = mouse.x;
+//     previousMouseY = mouse.y;
+
+//     mouse.active = true;
+
+// });
+
+// window.addEventListener("pointerleave", () => {
+
+//     mouse.active = false;
+
+//     mouse.x = -1000;
+//     mouse.y = -1000;
+
+//     mouse.vx = 0;
+//     mouse.vy = 0;
+
+// });
+
+
+// // ==========================================
+// // Создание частиц
+// // ==========================================
+
+// function createCloth() {
+
+//     particles = [];
+//     constraints = [];
+
+//     columns = Math.ceil(width / settings.spacing) + 1;
+//     rows = Math.ceil(height / settings.spacing) + 1;
+
+//     // Создаём сетку точек
+
+//     for (let row = 0; row <= rows; row++) {
+
+//         for (let col = 0; col <= columns; col++) {
+
+//             const x = col * settings.spacing;
+//             const y = row * settings.spacing;
+
+//             // Края ткани закреплены
+
+//             const pinned =
+//                 row === 0 ||
+//                 row === rows ||
+//                 col === 0 ||
+//                 col === columns;
+
+//             particles.push({
+
+//                 x: x,
+//                 y: y,
+
+//                 oldX: x,
+//                 oldY: y,
+
+//                 baseX: x,
+//                 baseY: y,
+
+//                 pinned: pinned
+
+//             });
+
+//         }
+//     }
+
+//     // Индекс частицы по координатам сетки
+
+//     function index(row, col) {
+//         return row * (columns + 1) + col;
+//     }
+
+//     // Создание связи между частицами
+
+//     function connect(a, b, stiffness) {
+
+//         const p1 = particles[a];
+//         const p2 = particles[b];
+
+//         const dx = p2.x - p1.x;
+//         const dy = p2.y - p1.y;
+
+//         constraints.push({
+
+//             a: a,
+//             b: b,
+
+//             length: Math.sqrt(dx * dx + dy * dy),
+
+//             stiffness: stiffness
+
+//         });
+//     }
+
+//     // Структурные связи:
+//     // горизонтальные и вертикальные
+
+//     for (let row = 0; row <= rows; row++) {
+
+//         for (let col = 0; col <= columns; col++) {
+
+//             const current = index(row, col);
+
+//             if (col < columns) {
+//                 connect(
+//                     current,
+//                     index(row, col + 1),
+//                     settings.stiffness
+//                 );
+//             }
+
+//             if (row < rows) {
+//                 connect(
+//                     current,
+//                     index(row + 1, col),
+//                     settings.stiffness
+//                 );
+//             }
+
+//             // Диагональные связи:
+//             // предотвращают деформацию ячеек в параллелограммы
+
+//             if (col < columns && row < rows) {
+
+//                 connect(
+//                     current,
+//                     index(row + 1, col + 1),
+//                     settings.stiffness * 0.7
+//                 );
+
+//                 connect(
+//                     index(row, col + 1),
+//                     index(row + 1, col),
+//                     settings.stiffness * 0.7
+//                 );
+
+//             }
+
+//             // Связи через одну точку:
+//             // сопротивление сильному изгибу
+
+//             if (col + 2 <= columns) {
+
+//                 connect(
+//                     current,
+//                     index(row, col + 2),
+//                     settings.bendStiffness
+//                 );
+
+//             }
+
+//             if (row + 2 <= rows) {
+
+//                 connect(
+//                     current,
+//                     index(row + 2, col),
+//                     settings.bendStiffness
+//                 );
+
+//             }
+
+//         }
+//     }
+// }
+
+
+// // ==========================================
+// // Verlet Integration
+// // Расчёт движения частиц
+// // ==========================================
+
+// function updateParticles() {
+
+//     for (const p of particles) {
+
+//         if (p.pinned) continue;
+
+//         // Скорость через разницу координат
+//         // текущего и предыдущего кадров
+
+//         let vx = (p.x - p.oldX) * settings.damping;
+//         let vy = (p.y - p.oldY) * settings.damping;
+
+//         // Сохраняем предыдущие координаты
+
+//         p.oldX = p.x;
+//         p.oldY = p.y;
+
+//         // Естественное движение воздуха
+
+//         const windX =
+//             Math.sin(p.y * 0.008 + time) *
+//             settings.windStrength;
+
+//         const windY =
+//             Math.cos(p.x * 0.006 + time * 0.7) *
+//             settings.windStrength;
+
+//         // Воздействие курсора
+
+//         let forceX = 0;
+//         let forceY = 0;
+
+//         if (mouse.active) {
+
+//             const dx = p.x - mouse.x;
+//             const dy = p.y - mouse.y;
+
+//             const distance = Math.sqrt(dx * dx + dy * dy);
+
+//             if (distance < settings.influenceRadius) {
+
+//                 const falloff =
+//                     1 - distance / settings.influenceRadius;
+
+//                 const influence = falloff * falloff;
+
+//                 const directionX = dx / (distance + 0.001);
+//                 const directionY = dy / (distance + 0.001);
+
+//                 // Курсор отталкивает ткань
+
+//                 forceX +=
+//                     directionX *
+//                     influence *
+//                     settings.mousePush;
+
+//                 forceY +=
+//                     directionY *
+//                     influence *
+//                     settings.mousePush;
+
+//                 // Движение курсора увлекает ткань
+
+//                 forceX +=
+//                     mouse.vx *
+//                     influence *
+//                     settings.mouseStrength *
+//                     0.025;
+
+//                 forceY +=
+//                     mouse.vy *
+//                     influence *
+//                     settings.mouseStrength *
+//                     0.025;
+
+//             }
+//         }
+
+//         // Обновляем координаты
+
+//         p.x += vx + windX + forceX;
+
+//         p.y += vy + windY + forceY + settings.gravity;
+
+//     }
+// }
+
+
+// // ==========================================
+// // Distance Constraints
+// // Сохранение формы ткани
+// // ==========================================
+
+// function solveConstraints() {
+
+//     for (let iteration = 0;
+//          iteration < settings.iterations;
+//          iteration++) {
+
+//         for (const c of constraints) {
+
+//             const p1 = particles[c.a];
+//             const p2 = particles[c.b];
+
+//             const dx = p2.x - p1.x;
+//             const dy = p2.y - p1.y;
+
+//             const distance = Math.sqrt(dx * dx + dy * dy);
+
+//             if (distance === 0) continue;
+
+//             // Отклонение от исходной длины связи
+
+//             const difference =
+//                 (distance - c.length) / distance;
+
+//             const correction =
+//                 difference * c.stiffness;
+
+//             const offsetX = dx * correction;
+//             const offsetY = dy * correction;
+
+//             // Распределяем нагрузку
+//             // между свободными частицами
+
+//             if (!p1.pinned && !p2.pinned) {
+
+//                 p1.x += offsetX * 0.5;
+//                 p1.y += offsetY * 0.5;
+
+//                 p2.x -= offsetX * 0.5;
+//                 p2.y -= offsetY * 0.5;
+
+//             } else if (p1.pinned && !p2.pinned) {
+
+//                 p2.x -= offsetX;
+//                 p2.y -= offsetY;
+
+//             } else if (!p1.pinned && p2.pinned) {
+
+//                 p1.x += offsetX;
+//                 p1.y += offsetY;
+
+//             }
+
+//         }
+//     }
+// }
+
+
+// // ==========================================
+// // Отрисовка сетки
+// // ==========================================
+
+// function drawCloth() {
+
+//     ctx.clearRect(0, 0, width, height);
+
+//     ctx.strokeStyle = settings.color;
+//     ctx.lineWidth = settings.lineWidth;
+//     ctx.globalAlpha = settings.opacity;
+
+//     // Горизонтальные линии
+
+//     for (let row = 0; row <= rows; row++) {
+
+//         ctx.beginPath();
+
+//         for (let col = 0; col <= columns; col++) {
+
+//             const p = particles[
+//                 row * (columns + 1) + col
+//             ];
+
+//             if (col === 0) {
+//                 ctx.moveTo(p.x, p.y);
+//             } else {
+//                 ctx.lineTo(p.x, p.y);
+//             }
+
+//         }
+
+//         ctx.stroke();
+//     }
+
+//     // Вертикальные линии
+
+//     for (let col = 0; col <= columns; col++) {
+
+//         ctx.beginPath();
+
+//         for (let row = 0; row <= rows; row++) {
+
+//             const p = particles[
+//                 row * (columns + 1) + col
+//             ];
+
+//             if (row === 0) {
+//                 ctx.moveTo(p.x, p.y);
+//             } else {
+//                 ctx.lineTo(p.x, p.y);
+//             }
+
+//         }
+
+//         ctx.stroke();
+//     }
+
+//     ctx.globalAlpha = 1;
+// }
+
+
+// // ==========================================
+// // Главный цикл анимации
+// // ==========================================
+
+// function animateCloth() {
+
+//     time += 0.016;
+
+//     updateParticles();
+
+//     solveConstraints();
+
+//     drawCloth();
+
+//     // Постепенно уменьшаем скорость курсора
+
+//     mouse.vx *= 0.8;
+//     mouse.vy *= 0.8;
+
+//     requestAnimationFrame(animateCloth);
+// }
+
+
+// // ==========================================
+// // Запуск
+// // ==========================================
+
+// resizeCanvas();
+
+// animateCloth();
+
+
+// ------------------------------------------------------------------- 3D-вихрь -------------------------------------------------------------------
 
 
 /* ==========================================
-   Interactive Cloth Simulation
-   Физическая симуляция тканевой сетки
+   3D Vortex Mesh
+   Интерактивный трёхмерный вихрь
 ========================================== */
 
 // Canvas
 const canvas = document.getElementById("mesh-canvas");
 const ctx = canvas.getContext("2d");
 
+
 // ==========================================
-// Настройки симуляции
+// Настройки
 // ==========================================
 
 const settings = {
 
     // Внешний вид
-    spacing: 24,
+    spacing: 20,
     color: "#E1E2E9",
     lineWidth: 1,
     opacity: 0.85,
 
-    // Физика ткани
-    damping: 0.985,          // Затухание инерции
-    iterations: 5,           // Количество расчётов связей
-    stiffness: 0.3,         // Жёсткость ткани
-    bendStiffness: 0.1,     // Сопротивление изгибу
+    // Радиус воздействия
+    influenceRadius: 500,
 
-    // Воздействие курсора
-    influenceRadius: 400,
-    mouseStrength: 1.9,
-    mousePush: 0.45,
+    // Вращение вихря
+    twistStrength: 2.2,
 
-    // Внешние силы
-    gravity: 0.015,
-    windStrength: 0.525,
+    // Объёмность
+    heightStrength: 38,
+    perspective: 900,
+
+    // Волны
+    waveAmplitude: 12,
+    waveFrequency: 0.025,
+    waveSpeed: 1.5,
+
+    // Плавность
+    mouseSmoothness: 0.09,
+    fadeSpeed: 0.06,
 
 };
+
 
 // ==========================================
 // Размеры Canvas
@@ -357,10 +870,7 @@ const settings = {
 
 let width = 0;
 let height = 0;
-let particles = [];
-let constraints = [];
-let columns = 0;
-let rows = 0;
+
 let time = 0;
 
 function resizeCanvas() {
@@ -374,352 +884,143 @@ function resizeCanvas() {
     canvas.height = height * dpr;
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    createCloth();
 }
+
+resizeCanvas();
+
+window.addEventListener("resize", resizeCanvas);
+
 
 // ==========================================
 // Курсор
 // ==========================================
 
 const mouse = {
-    x: -1000,
-    y: -1000,
+
+    x: width / 2,
+    y: height / 2,
+
+    targetX: width / 2,
+    targetY: height / 2,
+
     active: false,
-    vx: 0,
-    vy: 0
+    strength: 0
+
 };
 
-let previousMouseX = -1000;
-let previousMouseY = -1000;
+
+// Отслеживаем движение курсора
 
 window.addEventListener("pointermove", (event) => {
 
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-
-    mouse.vx = mouse.x - previousMouseX;
-    mouse.vy = mouse.y - previousMouseY;
-
-    previousMouseX = mouse.x;
-    previousMouseY = mouse.y;
+    mouse.targetX = event.clientX;
+    mouse.targetY = event.clientY;
 
     mouse.active = true;
 
 });
 
+
+// Плавное исчезновение при уходе курсора
+
 window.addEventListener("pointerleave", () => {
 
     mouse.active = false;
-
-    mouse.x = -1000;
-    mouse.y = -1000;
-
-    mouse.vx = 0;
-    mouse.vy = 0;
 
 });
 
 
 // ==========================================
-// Создание частиц
+// 3D-деформация точки
 // ==========================================
 
-function createCloth() {
+function distortPoint(x, y) {
 
-    particles = [];
-    constraints = [];
+    // Расстояние от точки до центра вихря
 
-    columns = Math.ceil(width / settings.spacing) + 1;
-    rows = Math.ceil(height / settings.spacing) + 1;
+    const dx = x - mouse.x;
+    const dy = y - mouse.y;
 
-    // Создаём сетку точек
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
-    for (let row = 0; row <= rows; row++) {
 
-        for (let col = 0; col <= columns; col++) {
+    // Радиус воздействия с плавным затуханием
 
-            const x = col * settings.spacing;
-            const y = row * settings.spacing;
+    const normalizedDistance =
+        Math.min(distance / settings.influenceRadius, 1);
 
-            // Края ткани закреплены
+    const falloff = Math.pow(
+        1 - normalizedDistance,
+        2
+    );
 
-            const pinned =
-                row === 0 ||
-                row === rows ||
-                col === 0 ||
-                col === columns;
+    const influence = falloff * mouse.strength;
 
-            particles.push({
 
-                x: x,
-                y: y,
+    // ======================================
+    // 1. Вращение вокруг курсора
+    // ======================================
 
-                oldX: x,
-                oldY: y,
+    const phase =
+        distance * settings.waveFrequency -
+        time * settings.waveSpeed;
 
-                baseX: x,
-                baseY: y,
+    const rotation =
+        settings.twistStrength * influence;
 
-                pinned: pinned
+    // Поворачиваем точку вокруг эпицентра
 
-            });
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
 
-        }
-    }
+    const rotatedX = dx * cos - dy * sin;
+    const rotatedY = dx * sin + dy * cos;
 
-    // Индекс частицы по координатам сетки
 
-    function index(row, col) {
-        return row * (columns + 1) + col;
-    }
+    // ======================================
+    // 2. Вертикальная деформация
+    // ======================================
 
-    // Создание связи между частицами
+    const wave =
+        Math.sin(phase) *
+        settings.waveAmplitude *
+        influence;
 
-    function connect(a, b, stiffness) {
+    // Имитация высоты поверхности
 
-        const p1 = particles[a];
-        const p2 = particles[b];
+    const z =
+        settings.heightStrength * influence +
+        wave;
 
-        const dx = p2.x - p1.x;
-        const dy = p2.y - p1.y;
 
-        constraints.push({
+    // ======================================
+    // 3. Перспективная проекция
+    // ======================================
 
-            a: a,
-            b: b,
+    const perspective =
+        settings.perspective /
+        (settings.perspective - z);
 
-            length: Math.sqrt(dx * dx + dy * dy),
+    // Применяем перспективу
 
-            stiffness: stiffness
+    const projectedX =
+        mouse.x + rotatedX * perspective;
 
-        });
-    }
+    const projectedY =
+        mouse.y + rotatedY * perspective;
 
-    // Структурные связи:
-    // горизонтальные и вертикальные
 
-    for (let row = 0; row <= rows; row++) {
+    // ======================================
+    // 4. Возвращаем координаты
+    // ======================================
 
-        for (let col = 0; col <= columns; col++) {
+    return {
 
-            const current = index(row, col);
+        x: projectedX,
+        y: projectedY
 
-            if (col < columns) {
-                connect(
-                    current,
-                    index(row, col + 1),
-                    settings.stiffness
-                );
-            }
+    };
 
-            if (row < rows) {
-                connect(
-                    current,
-                    index(row + 1, col),
-                    settings.stiffness
-                );
-            }
-
-            // Диагональные связи:
-            // предотвращают деформацию ячеек в параллелограммы
-
-            if (col < columns && row < rows) {
-
-                connect(
-                    current,
-                    index(row + 1, col + 1),
-                    settings.stiffness * 0.7
-                );
-
-                connect(
-                    index(row, col + 1),
-                    index(row + 1, col),
-                    settings.stiffness * 0.7
-                );
-
-            }
-
-            // Связи через одну точку:
-            // сопротивление сильному изгибу
-
-            if (col + 2 <= columns) {
-
-                connect(
-                    current,
-                    index(row, col + 2),
-                    settings.bendStiffness
-                );
-
-            }
-
-            if (row + 2 <= rows) {
-
-                connect(
-                    current,
-                    index(row + 2, col),
-                    settings.bendStiffness
-                );
-
-            }
-
-        }
-    }
-}
-
-
-// ==========================================
-// Verlet Integration
-// Расчёт движения частиц
-// ==========================================
-
-function updateParticles() {
-
-    for (const p of particles) {
-
-        if (p.pinned) continue;
-
-        // Скорость через разницу координат
-        // текущего и предыдущего кадров
-
-        let vx = (p.x - p.oldX) * settings.damping;
-        let vy = (p.y - p.oldY) * settings.damping;
-
-        // Сохраняем предыдущие координаты
-
-        p.oldX = p.x;
-        p.oldY = p.y;
-
-        // Естественное движение воздуха
-
-        const windX =
-            Math.sin(p.y * 0.008 + time) *
-            settings.windStrength;
-
-        const windY =
-            Math.cos(p.x * 0.006 + time * 0.7) *
-            settings.windStrength;
-
-        // Воздействие курсора
-
-        let forceX = 0;
-        let forceY = 0;
-
-        if (mouse.active) {
-
-            const dx = p.x - mouse.x;
-            const dy = p.y - mouse.y;
-
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < settings.influenceRadius) {
-
-                const falloff =
-                    1 - distance / settings.influenceRadius;
-
-                const influence = falloff * falloff;
-
-                const directionX = dx / (distance + 0.001);
-                const directionY = dy / (distance + 0.001);
-
-                // Курсор отталкивает ткань
-
-                forceX +=
-                    directionX *
-                    influence *
-                    settings.mousePush;
-
-                forceY +=
-                    directionY *
-                    influence *
-                    settings.mousePush;
-
-                // Движение курсора увлекает ткань
-
-                forceX +=
-                    mouse.vx *
-                    influence *
-                    settings.mouseStrength *
-                    0.025;
-
-                forceY +=
-                    mouse.vy *
-                    influence *
-                    settings.mouseStrength *
-                    0.025;
-
-            }
-        }
-
-        // Обновляем координаты
-
-        p.x += vx + windX + forceX;
-
-        p.y += vy + windY + forceY + settings.gravity;
-
-    }
-}
-
-
-// ==========================================
-// Distance Constraints
-// Сохранение формы ткани
-// ==========================================
-
-function solveConstraints() {
-
-    for (let iteration = 0;
-         iteration < settings.iterations;
-         iteration++) {
-
-        for (const c of constraints) {
-
-            const p1 = particles[c.a];
-            const p2 = particles[c.b];
-
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
-
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance === 0) continue;
-
-            // Отклонение от исходной длины связи
-
-            const difference =
-                (distance - c.length) / distance;
-
-            const correction =
-                difference * c.stiffness;
-
-            const offsetX = dx * correction;
-            const offsetY = dy * correction;
-
-            // Распределяем нагрузку
-            // между свободными частицами
-
-            if (!p1.pinned && !p2.pinned) {
-
-                p1.x += offsetX * 0.5;
-                p1.y += offsetY * 0.5;
-
-                p2.x -= offsetX * 0.5;
-                p2.y -= offsetY * 0.5;
-
-            } else if (p1.pinned && !p2.pinned) {
-
-                p2.x -= offsetX;
-                p2.y -= offsetY;
-
-            } else if (!p1.pinned && p2.pinned) {
-
-                p1.x += offsetX;
-                p1.y += offsetY;
-
-            }
-
-        }
-    }
 }
 
 
@@ -727,7 +1028,7 @@ function solveConstraints() {
 // Отрисовка сетки
 // ==========================================
 
-function drawCloth() {
+function drawMesh() {
 
     ctx.clearRect(0, 0, width, height);
 
@@ -735,76 +1036,108 @@ function drawCloth() {
     ctx.lineWidth = settings.lineWidth;
     ctx.globalAlpha = settings.opacity;
 
-    // Горизонтальные линии
 
-    for (let row = 0; row <= rows; row++) {
+    // Плавное перемещение эпицентра
 
-        ctx.beginPath();
+    mouse.x +=
+        (mouse.targetX - mouse.x) *
+        settings.mouseSmoothness;
 
-        for (let col = 0; col <= columns; col++) {
-
-            const p = particles[
-                row * (columns + 1) + col
-            ];
-
-            if (col === 0) {
-                ctx.moveTo(p.x, p.y);
-            } else {
-                ctx.lineTo(p.x, p.y);
-            }
-
-        }
-
-        ctx.stroke();
-    }
-
-    // Вертикальные линии
-
-    for (let col = 0; col <= columns; col++) {
-
-        ctx.beginPath();
-
-        for (let row = 0; row <= rows; row++) {
-
-            const p = particles[
-                row * (columns + 1) + col
-            ];
-
-            if (row === 0) {
-                ctx.moveTo(p.x, p.y);
-            } else {
-                ctx.lineTo(p.x, p.y);
-            }
-
-        }
-
-        ctx.stroke();
-    }
-
-    ctx.globalAlpha = 1;
-}
+    mouse.y +=
+        (mouse.targetY - mouse.y) *
+        settings.mouseSmoothness;
 
 
-// ==========================================
-// Главный цикл анимации
-// ==========================================
+    // Плавное появление и исчезновение вихря
 
-function animateCloth() {
+    const targetStrength = mouse.active ? 1 : 0;
+
+    mouse.strength +=
+        (targetStrength - mouse.strength) *
+        settings.fadeSpeed;
+
+
+    // Обновление времени
 
     time += 0.016;
 
-    updateParticles();
 
-    solveConstraints();
+    // Количество линий
 
-    drawCloth();
+    const columns =
+        Math.ceil(width / settings.spacing) + 1;
 
-    // Постепенно уменьшаем скорость курсора
+    const rows =
+        Math.ceil(height / settings.spacing) + 1;
 
-    mouse.vx *= 0.8;
-    mouse.vy *= 0.8;
 
-    requestAnimationFrame(animateCloth);
+    // ======================================
+    // Вертикальные линии
+    // ======================================
+
+    for (let col = -1; col <= columns; col++) {
+
+        ctx.beginPath();
+
+        for (let row = -1; row <= rows; row++) {
+
+            const x = col * settings.spacing;
+            const y = row * settings.spacing;
+
+            const point = distortPoint(x, y);
+
+            if (row === -1) {
+
+                ctx.moveTo(point.x, point.y);
+
+            } else {
+
+                ctx.lineTo(point.x, point.y);
+
+            }
+
+        }
+
+        ctx.stroke();
+
+    }
+
+
+    // ======================================
+    // Горизонтальные линии
+    // ======================================
+
+    for (let row = -1; row <= rows; row++) {
+
+        ctx.beginPath();
+
+        for (let col = -1; col <= columns; col++) {
+
+            const x = col * settings.spacing;
+            const y = row * settings.spacing;
+
+            const point = distortPoint(x, y);
+
+            if (col === -1) {
+
+                ctx.moveTo(point.x, point.y);
+
+            } else {
+
+                ctx.lineTo(point.x, point.y);
+
+            }
+
+        }
+
+        ctx.stroke();
+
+    }
+
+    ctx.globalAlpha = 1;
+
+    requestAnimationFrame(drawMesh);
+
 }
 
 
@@ -812,11 +1145,5 @@ function animateCloth() {
 // Запуск
 // ==========================================
 
-resizeCanvas();
-
-animateCloth();
-
-
-
-
+drawMesh();
 
