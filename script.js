@@ -847,15 +847,20 @@ const settings = {
 
     // Вращение вихря
     twistStrength: 2.2,
+    rotationSpeed: 0.18,
 
     // Объёмность
     heightStrength: 38,
     perspective: 900,
 
-    // Волны
+    // Волны вокруг вихря
     waveAmplitude: 12,
     waveFrequency: 0.025,
     waveSpeed: 1.5,
+
+    // Автономные колебания сетки
+    ambientAmplitude: 3,
+    ambientSpeed: 0.7,
 
     // Плавность
     mouseSmoothness: 0.09,
@@ -965,8 +970,26 @@ function distortPoint(x, y) {
         distance * settings.waveFrequency -
         time * settings.waveSpeed;
 
-    const rotation =
-        settings.twistStrength * influence;
+    // const rotation =
+    //     settings.twistStrength * influence;
+
+    // ======================================
+// Автономное изменение направления вихря
+// ======================================
+
+// Плавное изменение направления вращения
+// Значение постепенно меняется от -1 до +1
+
+const rotationDirection = Math.sin(
+    time * settings.rotationSpeed
+);
+
+// Угол вращения с учётом направления
+
+const rotation =
+    settings.twistStrength *
+    influence *
+    rotationDirection;
 
     // Поворачиваем точку вокруг эпицентра
 
@@ -1014,12 +1037,60 @@ function distortPoint(x, y) {
     // 4. Возвращаем координаты
     // ======================================
 
-    return {
+    // return {
 
-        x: projectedX,
-        y: projectedY
+    //     x: projectedX,
+    //     y: projectedY
 
-    };
+    // };
+
+    // ======================================
+// Автономные колебания поверхности
+// ======================================
+
+// Горизонтальное движение
+const ambientX =
+
+    Math.sin(
+        y * 0.012 +
+        time * settings.ambientSpeed
+    ) * settings.ambientAmplitude
+
+    +
+
+    Math.sin(
+        (x + y) * 0.006 -
+        time * 0.45
+    ) * settings.ambientAmplitude * 0.5;
+
+
+// Вертикальное движение
+const ambientY =
+
+    Math.cos(
+        x * 0.01 -
+        time * settings.ambientSpeed
+    ) * settings.ambientAmplitude
+
+    +
+
+    Math.sin(
+        (x - y) * 0.008 +
+        time * 0.5
+    ) * settings.ambientAmplitude * 0.5;
+
+
+// ======================================
+// Финальные координаты
+// ======================================
+
+return {
+
+    x: projectedX + ambientX,
+
+    y: projectedY + ambientY
+
+};
 
 }
 
