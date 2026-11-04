@@ -330,24 +330,24 @@ const settings = {
 
     // Внешний вид
     spacing: 24,
-    color: "#D9D7D1",
+    color: "#E1E2E9",
     lineWidth: 1,
     opacity: 0.85,
 
     // Физика ткани
     damping: 0.985,          // Затухание инерции
     iterations: 5,           // Количество расчётов связей
-    stiffness: 0.85,         // Жёсткость ткани
-    bendStiffness: 0.12,     // Сопротивление изгибу
+    stiffness: 0.3,         // Жёсткость ткани
+    bendStiffness: 0.1,     // Сопротивление изгибу
 
     // Воздействие курсора
-    influenceRadius: 200,
-    mouseStrength: 0.9,
+    influenceRadius: 400,
+    mouseStrength: 1.9,
     mousePush: 0.45,
 
     // Внешние силы
     gravity: 0.015,
-    windStrength: 0.025,
+    windStrength: 0.525,
 
 };
 
