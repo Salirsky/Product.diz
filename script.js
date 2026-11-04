@@ -32,7 +32,7 @@ function animateGradient() {
     
     radial-gradient( 
     circle at ${x2}% ${y2}%, 
-    #EFFAF4 0%, 
+    #FDF6F4 0%, 
     transparent 45% 
     ), 
     
@@ -43,19 +43,19 @@ function animateGradient() {
     
     radial-gradient( 
     circle at 80% 20%, 
-    #FAF4E6 0%, 
+    #FDF8F7 0%, 
     transparent 45% 
     ), 
     
     radial-gradient( 
     circle at 15% 80%, 
-    #F9FAEA 0%, 
+    #F5F5FB 0%, 
     transparent 45% 
     ), 
     
     radial-gradient( 
     circle at 80% 80%, 
-    #F3FAEA 0%, 
+    #F8F2F4 0%, 
     transparent 45% 
     ) `;
 
@@ -104,7 +104,7 @@ const ctx = canvas.getContext("2d");
 // Настройки сетки
 const settings = {
     spacing: 20,          // Расстояние между линиями
-    color: "#D9D7D1",     // Цвет сетки
+    color: "#E1E2E9",     // Цвет сетки
     lineWidth: 1,         // Толщина линий
 
     influenceRadius: 230, // Радиус влияния курсора
