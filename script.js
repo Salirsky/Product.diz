@@ -846,25 +846,25 @@ const settings = {
     influenceRadius: 500,
 
     // Вращение вихря
-    twistStrength: 2.2,
-    rotationSpeed: 0.18,
+    twistStrength: 5.0,
+    rotationSpeed: 0.38,
 
     // Объёмность
-    heightStrength: 38,
+    heightStrength: 58,
     perspective: 900,
 
     // Волны вокруг вихря
     waveAmplitude: 12,
-    waveFrequency: 0.025,
-    waveSpeed: 1.5,
+    waveFrequency: 0.065,
+    waveSpeed: 2.5,
 
     // Автономные колебания сетки
-    ambientAmplitude: 3,
-    ambientSpeed: 0.7,
+    ambientAmplitude: 8,
+    ambientSpeed: 1.7,
 
     // Плавность
-    mouseSmoothness: 0.09,
-    fadeSpeed: 0.06,
+    mouseSmoothness: 0.29,
+    fadeSpeed: 0.36,
 
 };
 
