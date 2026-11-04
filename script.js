@@ -107,13 +107,13 @@ const settings = {
     color: "#E1E2E9",     // Цвет сетки
     lineWidth: 1,         // Толщина линий
 
-    influenceRadius: 230, // Радиус влияния курсора
-    influenceStrength: 28, // Сила деформации
+    influenceRadius: 330, // Радиус влияния курсора
+    influenceStrength: 25, // Сила деформации
 
     waveSpeed: 2.0,       // Скорость волн
-    waveFrequency: 0.035, // Частота волн
+    waveFrequency: 0.030, // Частота волн
 
-    ambientStrength: 3,   // Естественное колебание
+    ambientStrength: 2,   // Естественное колебание
 };
 
 // Размеры экрана
