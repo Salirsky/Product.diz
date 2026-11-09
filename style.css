@@ -240,7 +240,7 @@ box-shadow:
     padding: 1.5px;
     border-radius: inherit;
 
-    stroke: conic-gradient(
+    border: conic-gradient(
         from 0deg,
         transparent 0deg,
         transparent 35deg,
@@ -295,7 +295,7 @@ box-shadow:
 
     border-radius: inherit;
 
-    stroke: conic-gradient(
+    border: conic-gradient(
         from 0deg,
         transparent 0deg,
         #397BFF 65deg,
