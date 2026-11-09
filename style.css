@@ -204,14 +204,195 @@ box-shadow:
     margin-top: 20px;
 }
 
-/* Карточки проектов */
-.project {
 
-grid-column: span 4;
-text-decoration: none;  /* новое */
-color: inherit;  /* новое */
+/* ==========================================
+   Project Cards — Chromatic Orbit
+========================================== */
+
+.project {
+    grid-column: span 4;
+
+    display: block;
+    position: relative;
+    isolation: isolate;
+
+    text-decoration: none;
+    color: inherit;
+
+    overflow: hidden;
+
+    /* Переменная для управления вращением */
+    --orbit-duration: 5s;
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* Цветной светящийся контур */
+
+.project::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    padding: 1.5px;
+    border-radius: inherit;
+
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 35deg,
+
+        #397BFF 55deg,
+        #B34BFF 75deg,
+        #FF405E 95deg,
+
+        transparent 115deg,
+        transparent 215deg,
+
+        #FF405E 235deg,
+        #B34BFF 255deg,
+        #397BFF 275deg,
+
+        transparent 295deg,
+        transparent 360deg
+    );
+
+    /* Оставляем только тонкую рамку */
+
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+
+    mask-composite: exclude;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: opacity 0.3s ease;
+
+    animation:
+        orbit-spin var(--orbit-duration) linear infinite,
+        orbit-color 8s ease-in-out infinite;
+}
+
+/* Дополнительное мягкое свечение */
+
+.project::after {
+    content: "";
+
+    position: absolute;
+    inset: -2px;
+
+    border-radius: inherit;
+
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        #397BFF 65deg,
+        transparent 100deg,
+        transparent 180deg,
+        #FF405E 245deg,
+        transparent 280deg
+    );
+
+    filter: blur(16px);
+
+    opacity: 0;
+
+    z-index: -1;
+
+    pointer-events: none;
+
+    animation:
+        orbit-spin var(--orbit-duration) linear infinite,
+        orbit-color 8s ease-in-out infinite;
+
+    transition: opacity 0.3s ease;
+}
+
+/* Анимация вращения */
+
+@keyframes orbit-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 
 }
+
+/* Плавная смена синего и красного */
+
+@keyframes orbit-color {
+
+    0%, 100% {
+        filter: hue-rotate(0deg);
+    }
+
+    50% {
+        filter: hue-rotate(180deg);
+    }
+
+}
+
+/* Состояние при наведении */
+
+.project:hover {
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.08),
+        0 0 25px rgba(90, 100, 255, 0.08);
+}
+
+.project:hover::before {
+    opacity: 1;
+}
+
+.project:hover::after {
+    opacity: 0.65;
+}
+
+/* Поддержка клавиатурной навигации */
+
+.project:focus-visible {
+    outline: 2px solid #397BFF;
+    outline-offset: 4px;
+}
+
+.project:focus-visible::before,
+.project:focus-visible::after {
+    opacity: 1;
+}
+
+/* Уважение настроек уменьшения анимации */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .project::before,
+    .project::after {
+        animation: none;
+    }
+
+    .project {
+        transition: none;
+    }
+
+}
+
 
 /* Превью кейса */
 .project-image {
