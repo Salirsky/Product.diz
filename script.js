@@ -846,8 +846,8 @@ const settings = {
     influenceRadius: 500,
 
     // Вращение вихря
-    twistStrength: 5.0,
-    rotationSpeed: 0.38,
+    twistStrength: 4.0,
+    rotationSpeed: 0.3,
 
     // Объёмность
     heightStrength: 58,
