@@ -481,3 +481,18 @@ transform:
         height: auto;
     }
 }
+
+/* Оптимизация анимации карточек */
+
+.project::before,
+.project::after {
+    will-change: transform, opacity;
+}
+
+/* Не запускаем анимацию для карточек,
+   когда пользователь не взаимодействует с ними */
+
+.project:not(:hover):not(:focus-visible)::before,
+.project:not(:hover):not(:focus-visible)::after {
+    animation-play-state: paused;
+}
