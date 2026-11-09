@@ -163,7 +163,7 @@ transition:
 }
 
 /* Hover карточек project */
-.project:hover {
+:hover {
     transform: translateY(-6px);
 box-shadow:
     0 20px 60px rgba(0,0,0,.08);
@@ -232,57 +232,43 @@ box-shadow:
 /* Цветной светящийся контур */
 
 .project::before {
-    content: "";
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
 
-    position: absolute;
-    inset: 0;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 35deg,
+    #397BFF 55deg,
+    #B34BFF 75deg,
+    #FF405E 95deg,
+    transparent 115deg 215deg,
+    #FF405E 235deg,
+    #B34BFF 255deg,
+    #397BFF 275deg,
+    transparent 295deg 360deg
+  );
 
-    padding: 1.5px;
-    border-radius: inherit;
+  /* Оставляем видимым только контур */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
 
-    background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        transparent 35deg,
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
 
-        #397BFF 55deg,
-        #B34BFF 75deg,
-        #FF405E 95deg,
+  opacity: 0;
+  pointer-events: none;
 
-        transparent 115deg,
-        transparent 215deg,
-
-        #FF405E 235deg,
-        #B34BFF 255deg,
-        #397BFF 275deg,
-
-        transparent 295deg,
-        transparent 360deg
-    );
-
-    /* Оставляем только тонкую рамку */
-
-    -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-
-    -webkit-mask-composite: xor;
-
-    mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-
-    mask-composite: exclude;
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    transition: opacity 0.3s ease;
-
-    animation:
-        orbit-spin var(--orbit-duration) linear infinite,
-        orbit-color 8s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+  animation:
+    orbit-spin 5s linear infinite,
+    orbit-color 8s ease-in-out infinite;
 }
 
 /* Дополнительное мягкое свечение */
@@ -493,6 +479,6 @@ transform:
    когда пользователь не взаимодействует с ними */
 
 .project:not(:hover):not(:focus-visible)::before,
-.project:not(:hover):not(:focus-visible)::after {
+:not(:hover):not(:focus-visible)::after {
     animation-play-state: paused;
 }
